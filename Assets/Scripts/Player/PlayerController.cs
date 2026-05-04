@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float sprintMultiplier = 1.5f;
     [SerializeField] private float jumpForce = 10f;
 
+    [Header("Physics: Air Resistance (Glide)")]
+    [SerializeField] private float dragCoefficient = 10f; // ค่า k (สัมประสิทธิ์แรงต้านอากาศ) ปรับให้ร่อนช้าหรือเร็วได้ตรงนี้
+    private bool isGliding; // เช็คว่ากำลังกดปุ่มร่อนอยู่ไหม
+
     [Header("Ground & Ice Check")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.2f;
@@ -22,17 +26,14 @@ public class PlayerController : MonoBehaviour
     private bool isSprinting;
     private Vector2 moveInput;
 
-    [Header("Game State")]
+    [Header("Game State and UI")]
     public bool hasKey = false;
+    [SerializeField] private GameUIManager uiManager;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        if (rb == null)
-        {
-            Debug.LogError("🚨 จับได้แล้ว! สคริปต์ PlayerController ไปโผล่อยู่ที่ Object ชื่อ: '" + gameObject.name + "' แต่มันไม่มี Rigidbody2D ครับ!");
-        }
+        if (rb == null) Debug.LogError("🚨 สคริปต์ PlayerController หา Rigidbody2D ไม่เจอครับ!");
     }
 
     void Update()
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
     {
         if (rb != null)
         {
+            // --- 1. Walking And Sprinting ---
             float currentMoveSpeed = moveSpeed;
             float currentIceSpeed = iceMoveSpeed;
 
@@ -62,13 +64,23 @@ public class PlayerController : MonoBehaviour
             if (isOnIce)
             {
                 if (Mathf.Abs(moveInput.x) > 0.1f)
-                {
                     rb.linearVelocity = new Vector2(moveInput.x * currentIceSpeed, rb.linearVelocity.y);
-                }
             }
             else
             {
                 rb.linearVelocity = new Vector2(moveInput.x * currentMoveSpeed, rb.linearVelocity.y);
+            }
+
+            // --- 2. Air Resistance (Glide) ---
+            if (rb.linearVelocity.y < 0 && isGliding && !isGrounded)
+            {
+                float velocityY = rb.linearVelocity.y;
+
+                // คํานวณแรงต้านตามสูตร: F_drag = k * v^2
+                // (ใช้ v*v ค่าจะออกมาเป็นบวกเสมอ ซึ่งถูกต้องเพราะแรงต้านต้องมีทิศทางชี้ขึ้น สวนกับความเร็วที่ตกลงมา)
+                float dragForce = dragCoefficient * (velocityY * velocityY);
+
+                rb.AddForce(new Vector2(0, dragForce));
             }
         }
     }
@@ -76,13 +88,10 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
-        Debug.Log("กำลังกดปุ่มทิศทาง: " + moveInput);
     }
 
     public void OnJump(InputValue value)
     {
-        Debug.Log("กดปุ่มกระโดด! เท้าติดพื้นไหม?: " + isGrounded);
-
         if (value.isPressed && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -92,7 +101,11 @@ public class PlayerController : MonoBehaviour
     public void OnSprint(InputValue value)
     {
         isSprinting = value.isPressed;
-        Debug.Log("กำลังกดวิ่ง: " + isSprinting);
+    }
+
+    public void OnGlide(InputValue value)
+    {
+        isGliding = value.isPressed;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -101,7 +114,8 @@ public class PlayerController : MonoBehaviour
         {
             hasKey = true;
             Destroy(collision.gameObject);
-            Debug.Log("Got the Key!");
+
+            if (uiManager != null) uiManager.UpdateKeyStatus(true);
         }
 
         if (collision.CompareTag("Trap") || collision.CompareTag("Lava"))
@@ -111,21 +125,13 @@ public class PlayerController : MonoBehaviour
 
         if (collision.CompareTag("Win"))
         {
-            if (hasKey)
-            {
-                Debug.Log("Level Cleared!");
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            }
-            else
-            {
-                Debug.Log("You need the key first!");
-            }
+            if (hasKey) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            GameUIManager.ResetTimer();
         }
     }
 
     private void Die()
     {
-        Debug.Log("Player Died!");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

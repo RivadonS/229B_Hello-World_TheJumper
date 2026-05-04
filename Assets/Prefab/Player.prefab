@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 8652507376183970630}
   - component: {fileID: 3792621246464090428}
   - component: {fileID: 3372419792989153923}
-  - component: {fileID: 197679133319505273}
-  - component: {fileID: 2189129795824120270}
   - component: {fileID: 1693238627224012788}
+  - component: {fileID: 3928887799010647710}
+  - component: {fileID: 4547932440536043858}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -133,7 +133,34 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 1.9999999}
   m_Direction: 0
---- !u!50 &197679133319505273
+--- !u!114 &1693238627224012788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 906542355024727368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80774d43e7a2d0d418756def975a9c45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  moveSpeed: 3
+  iceMoveSpeed: 10
+  sprintMultiplier: 3
+  jumpForce: 8
+  dragCoefficient: 10
+  groundCheck: {fileID: 8650651936216265992}
+  groundCheckRadius: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  iceLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  hasKey: 0
+  uiManager: {fileID: 0}
+--- !u!50 &3928887799010647710
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -160,7 +187,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &2189129795824120270
+--- !u!114 &4547932440536043858
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -190,31 +217,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1693238627224012788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 906542355024727368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80774d43e7a2d0d418756def975a9c45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 4
-  iceMoveSpeed: 8
-  sprintMultiplier: 8
-  jumpForce: 12
-  groundCheck: {fileID: 8650651936216265992}
-  groundCheckRadius: 0.2
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  iceLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  hasKey: 0
 --- !u!1 &8904220314568057870
 GameObject:
   m_ObjectHideFlags: 0
