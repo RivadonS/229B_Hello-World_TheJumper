@@ -799,37 +799,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!1 &1022423371
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1022423372}
-  m_Layer: 0
-  m_Name: GroundCheck
-  m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1022423372
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1022423371}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.08, z: 0}
-  m_LocalScale: {x: 2.0062695, y: 2.347762, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6963614699379165106}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1098910700
 GameObject:
   m_ObjectHideFlags: 0
@@ -2421,6 +2390,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1693238627224012788, guid: 53e1c47c6a6573248826cb59ca695192, type: 3}
+      propertyPath: iceLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 3792621246464090428, guid: 53e1c47c6a6573248826cb59ca695192, type: 3}
       propertyPath: m_Color.b
       value: 0.64564466
@@ -2479,10 +2452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 8652507376183970630, guid: 53e1c47c6a6573248826cb59ca695192, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1022423372}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 906542355024727368, guid: 53e1c47c6a6573248826cb59ca695192, type: 3}
       insertIndex: -1
@@ -2539,11 +2509,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 1.9999999}
   m_Direction: 0
---- !u!4 &6963614699379165106 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8652507376183970630, guid: 53e1c47c6a6573248826cb59ca695192, type: 3}
-  m_PrefabInstance: {fileID: 6963614699379165102}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6963614699379165107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2587,12 +2552,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 4
+  iceMoveSpeed: 8
+  sprintMultiplier: 8
   jumpForce: 12
-  groundCheck: {fileID: 1022423372}
+  groundCheck: {fileID: 0}
   groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  iceLayer:
+    serializedVersion: 2
+    m_Bits: 0
   hasKey: 0
 --- !u!50 &6963614699379165110
 Rigidbody2D:

@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float iceMoveSpeed = 8f;
+    [SerializeField] private float sprintMultiplier = 1.5f;
     [SerializeField] private float jumpForce = 10f;
 
     [Header("Ground & Ice Check")]
@@ -18,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private bool isGrounded;
     private bool isOnIce;
+    private bool isSprinting;
     private Vector2 moveInput;
 
     [Header("Game State")]
@@ -25,7 +27,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        //For get component from player
         rb = GetComponent<Rigidbody2D>();
 
         if (rb == null)
@@ -38,31 +39,36 @@ public class PlayerController : MonoBehaviour
     {
         if (groundCheck == null) return;
 
-        //Check if the player is grounded
         bool touchGround = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         bool touchIce = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, iceLayer);
 
         isGrounded = touchGround || touchIce;
-
         isOnIce = touchIce && !touchGround;
     }
 
     void FixedUpdate()
     {
-        //Move the player
         if (rb != null)
         {
+            float currentMoveSpeed = moveSpeed;
+            float currentIceSpeed = iceMoveSpeed;
+
+            if (isSprinting)
+            {
+                currentMoveSpeed *= sprintMultiplier;
+                currentIceSpeed *= sprintMultiplier;
+            }
+
             if (isOnIce)
             {
                 if (Mathf.Abs(moveInput.x) > 0.1f)
                 {
-                    rb.linearVelocity = new Vector2(moveInput.x * iceMoveSpeed, rb.linearVelocity.y);
+                    rb.linearVelocity = new Vector2(moveInput.x * currentIceSpeed, rb.linearVelocity.y);
                 }
-
             }
             else
             {
-                rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
+                rb.linearVelocity = new Vector2(moveInput.x * currentMoveSpeed, rb.linearVelocity.y);
             }
         }
     }
@@ -81,6 +87,12 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
+    }
+
+    public void OnSprint(InputValue value)
+    {
+        isSprinting = value.isPressed;
+        Debug.Log("กำลังกดวิ่ง: " + isSprinting);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

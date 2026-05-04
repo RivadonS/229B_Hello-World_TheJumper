@@ -203,12 +203,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 4
+  iceMoveSpeed: 8
+  sprintMultiplier: 8
   jumpForce: 12
   groundCheck: {fileID: 8650651936216265992}
   groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  iceLayer:
+    serializedVersion: 2
+    m_Bits: 128
   hasKey: 0
 --- !u!1 &8904220314568057870
 GameObject:
