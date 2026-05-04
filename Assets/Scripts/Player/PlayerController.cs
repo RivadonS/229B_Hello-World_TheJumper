@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float iceMoveSpeed = 8f;
     [SerializeField] private float sprintMultiplier = 1.5f;
     [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float iceSlipFactor = 3f;
 
     [Header("Physics: Air Resistance (Glide)")]
     [SerializeField] private float dragCoefficient = 10f; // ค่า k (สัมประสิทธิ์แรงต้านอากาศ) ปรับให้ร่อนช้าหรือเร็วได้ตรงนี้
@@ -63,8 +64,10 @@ public class PlayerController : MonoBehaviour
 
             if (isOnIce)
             {
-                if (Mathf.Abs(moveInput.x) > 0.1f)
-                    rb.linearVelocity = new Vector2(moveInput.x * currentIceSpeed, rb.linearVelocity.y);
+                float targetSpeedX = moveInput.x * currentIceSpeed;
+                float smoothedX = Mathf.Lerp(rb.linearVelocity.x, targetSpeedX, Time.fixedDeltaTime * iceSlipFactor);
+                rb.linearVelocity = new Vector2(smoothedX, rb.linearVelocity.y);
+               
             }
             else
             {

@@ -149,6 +149,7 @@ MonoBehaviour:
   iceMoveSpeed: 10
   sprintMultiplier: 3
   jumpForce: 8
+  iceSlipFactor: 10
   dragCoefficient: 10
   groundCheck: {fileID: 8650651936216265992}
   groundCheckRadius: 0.2
